@@ -69,6 +69,11 @@ public class TestingSchedulerNG implements SchedulerNG {
     }
 
     @Override
+    public void onTaskMangerTimeout() {
+
+    }
+
+    @Override
     public void setMainThreadExecutor(ComponentMainThreadExecutor mainThreadExecutor) {}
 
     @Override

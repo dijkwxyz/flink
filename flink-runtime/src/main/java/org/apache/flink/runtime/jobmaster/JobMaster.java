@@ -455,6 +455,10 @@ public class JobMaster extends FencedRpcEndpoint<JobMasterId>
         if (taskManagerConnection != null) {
             taskManagerConnection.f1.disconnectJobManager(jobGraph.getJobID(), cause);
         }
+        // dispose local checkpoints for Multilevel.
+        // Because there's no guarantee that the task
+        // will be rescheduled on the same TM again.
+        schedulerNG.onTaskMangerTimeout();
 
         return CompletableFuture.completedFuture(Acknowledge.get());
     }

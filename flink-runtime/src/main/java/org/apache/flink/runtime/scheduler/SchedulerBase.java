@@ -26,6 +26,7 @@ import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.api.common.time.Time;
 import org.apache.flink.configuration.CheckpointingOptions;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.core.fs.Path;
 import org.apache.flink.core.io.InputSplit;
 import org.apache.flink.queryablestate.KvStateID;
 import org.apache.flink.runtime.JobException;
@@ -37,6 +38,7 @@ import org.apache.flink.runtime.checkpoint.CheckpointFailureReason;
 import org.apache.flink.runtime.checkpoint.CheckpointMetrics;
 import org.apache.flink.runtime.checkpoint.CheckpointRecoveryFactory;
 import org.apache.flink.runtime.checkpoint.CompletedCheckpoint;
+import org.apache.flink.runtime.checkpoint.CompletedCheckpointStore;
 import org.apache.flink.runtime.checkpoint.TaskStateSnapshot;
 import org.apache.flink.runtime.client.JobExecutionException;
 import org.apache.flink.runtime.concurrent.ComponentMainThreadExecutor;
@@ -1240,6 +1242,26 @@ public abstract class SchedulerBase implements SchedulerNG {
             }
         }
         return coordinatorMap;
+    }
+
+    /**
+     * clear local checkpoints for MULTILEVEL
+     */
+    @Override
+    public void onTaskMangerTimeout() {
+        CompletedCheckpointStore checkpointStore = getCheckpointCoordinator().getCheckpointStore();
+        try {
+            for (CompletedCheckpoint cp : checkpointStore.getAllCheckpoints()) {
+                Path path = new Path(cp.getExternalPointer());
+                //dispose local checkpoints
+                if (!path.getFileSystem().isDistributedFS()) {
+                    cp.discardOnFailedStoring();
+                    log.info("On TaskManager Timeout, dispose local checkpoint: {}", cp.toString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // ------------------------------------------------------------------------

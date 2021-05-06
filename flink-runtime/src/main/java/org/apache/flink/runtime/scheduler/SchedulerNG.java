@@ -69,6 +69,7 @@ import java.util.concurrent.CompletableFuture;
  * be passed via {@link #setMainThreadExecutor(ComponentMainThreadExecutor)}.
  */
 public interface SchedulerNG {
+    void onTaskMangerTimeout();
 
     void setMainThreadExecutor(ComponentMainThreadExecutor mainThreadExecutor);
 
