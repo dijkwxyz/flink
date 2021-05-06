@@ -31,6 +31,7 @@ public interface CompletedCheckpointStore {
 
     Logger LOG = LoggerFactory.getLogger(CompletedCheckpointStore.class);
 
+    void onTaskMangerTimeout();
     /**
      * Recover available {@link CompletedCheckpoint} instances.
      *

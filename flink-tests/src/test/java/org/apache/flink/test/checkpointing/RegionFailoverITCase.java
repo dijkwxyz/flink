@@ -466,6 +466,11 @@ public class RegionFailoverITCase extends TestLogger {
         }
 
         @Override
+        public void onTaskMangerTimeout() {
+
+        }
+
+        @Override
         public void addCheckpoint(CompletedCheckpoint checkpoint) throws Exception {
             super.addCheckpoint(checkpoint);
             // we record the information when adding completed checkpoint instead of

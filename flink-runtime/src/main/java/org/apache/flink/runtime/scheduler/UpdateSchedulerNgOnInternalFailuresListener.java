@@ -24,6 +24,11 @@ import org.apache.flink.runtime.execution.ExecutionState;
 import org.apache.flink.runtime.executiongraph.ExecutionAttemptID;
 import org.apache.flink.runtime.taskmanager.TaskExecutionState;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeoutException;
+
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
@@ -31,6 +36,8 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * {@link SchedulerNG#handleGlobalFailure(Throwable)} on global failures.
  */
 class UpdateSchedulerNgOnInternalFailuresListener implements InternalFailuresListener {
+    private static final Logger LOG =
+            LoggerFactory.getLogger(UpdateSchedulerNgOnInternalFailuresListener.class);
 
     private final SchedulerNG schedulerNg;
 
@@ -45,6 +52,10 @@ class UpdateSchedulerNgOnInternalFailuresListener implements InternalFailuresLis
 
     @Override
     public void notifyTaskFailure(final ExecutionAttemptID attemptId, final Throwable t) {
+        if (t instanceof TimeoutException) {
+            schedulerNg.onTaskMangerTimeout();
+            LOG.info("called onTaskMangerTimeout");
+        }
         schedulerNg.updateTaskExecutionState(
                 new TaskExecutionState(jobId, attemptId, ExecutionState.FAILED, t));
     }

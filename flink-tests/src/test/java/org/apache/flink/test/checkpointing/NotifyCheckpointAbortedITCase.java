@@ -420,6 +420,11 @@ public class NotifyCheckpointAbortedITCase extends TestLogger {
         }
 
         @Override
+        public void onTaskMangerTimeout() {
+
+        }
+
+        @Override
         public void addCheckpoint(CompletedCheckpoint checkpoint) throws Exception {
             if (abortCheckpointLatch.isTriggered()) {
                 super.addCheckpoint(checkpoint);

@@ -114,6 +114,7 @@ import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1245,23 +1246,12 @@ public abstract class SchedulerBase implements SchedulerNG {
     }
 
     /**
-     * clear local checkpoints for MULTILEVEL
+     * called when receiving timeout exception from
+     * TaskManager heartbeat listener
      */
     @Override
     public void onTaskMangerTimeout() {
-        CompletedCheckpointStore checkpointStore = getCheckpointCoordinator().getCheckpointStore();
-        try {
-            for (CompletedCheckpoint cp : checkpointStore.getAllCheckpoints()) {
-                Path path = new Path(cp.getExternalPointer());
-                //dispose local checkpoints
-                if (!path.getFileSystem().isDistributedFS()) {
-                    cp.discardOnFailedStoring();
-                    log.info("On TaskManager Timeout, dispose local checkpoint: {}", cp.toString());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        getCheckpointCoordinator().getCheckpointStore().onTaskMangerTimeout();
     }
 
     // ------------------------------------------------------------------------

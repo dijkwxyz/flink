@@ -120,6 +120,11 @@ public class ZooKeeperCompletedCheckpointStore implements CompletedCheckpointSto
         return true;
     }
 
+    @Override
+    public void onTaskMangerTimeout() {
+
+    }
+
     /**
      * Gets the latest checkpoint from ZooKeeper and removes all others.
      *

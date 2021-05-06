@@ -55,6 +55,11 @@ public class RecoverableCompletedCheckpointStore implements CompletedCheckpointS
     }
 
     @Override
+    public void onTaskMangerTimeout() {
+
+    }
+
+    @Override
     public void recover() throws Exception {
         checkpoints.addAll(suspended);
         suspended.clear();

@@ -57,6 +57,11 @@ public class StandaloneCompletedCheckpointStore implements CompletedCheckpointSt
     }
 
     @Override
+    public void onTaskMangerTimeout() {
+
+    }
+
+    @Override
     public void recover() throws Exception {
         // Nothing to do
     }

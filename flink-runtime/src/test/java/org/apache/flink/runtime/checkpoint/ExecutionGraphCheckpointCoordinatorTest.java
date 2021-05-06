@@ -210,6 +210,11 @@ public class ExecutionGraphCheckpointCoordinatorTest extends TestLogger {
         }
 
         @Override
+        public void onTaskMangerTimeout() {
+
+        }
+
+        @Override
         public void recover() {
             throw new UnsupportedOperationException("Not implemented.");
         }

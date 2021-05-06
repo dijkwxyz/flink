@@ -157,6 +157,11 @@ public class CheckpointCoordinatorFailureTest extends TestLogger {
     private static final class FailingCompletedCheckpointStore implements CompletedCheckpointStore {
 
         @Override
+        public void onTaskMangerTimeout() {
+
+        }
+
+        @Override
         public void recover() throws Exception {
             throw new UnsupportedOperationException("Not implemented.");
         }
