@@ -62,6 +62,10 @@ class UpdateSchedulerNgOnInternalFailuresListener implements InternalFailuresLis
 
     @Override
     public void notifyGlobalFailure(Throwable t) {
+        if (t instanceof TimeoutException) {
+            schedulerNg.onTaskMangerTimeout();
+            LOG.info("called onTaskMangerTimeout");
+        }
         schedulerNg.handleGlobalFailure(t);
     }
 }
